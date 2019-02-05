@@ -1,0 +1,135 @@
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Colocar cotação do Dólar, Euro Bitcoin</title>
+    <meta name="description" content="cotações do dólar, euro, peso e outras moedas no seu site e tenha mais visitas!" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content="http://renatolucena.net/index" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style media="screen">
+    #inner {
+      margin: 0 auto;
+      width: 50%; /* Altere para o valor da largura desejada. */
+      }
+    </style>
+</head>
+<body>
+  <div class="container-fluid">
+  <div class="col-xs-12">
+    <div class="wrap" id="inner">
+      <div class="title_cotacao"><h1 style="color: #0b7;">Cotação do dólar Hoje (Americano)</h1></div>
+      <div class="cedula" id="inner"><img src="dolar-hoje.jpg" alt="Dólar Hoje"></div>
+    </div>
+  </div>
+  <p id="hoje"></p>
+  <p id="cotacaoHoje"></p>
+  <p id="historico"></p>
+  <h3 style="color: #e73110;">Cotações anteriores</h3>
+  <table id="tabela" class="table table-striped" border='1'>
+<thread>
+  <div class ="col-md-6">
+    <th>Dólar</th>
+    <th>Data</th>
+    <th>Valor</th>
+  </div>
+</thread>
+</table>
+<p id="menoresValores"></p>
+<p id="maioresValores"></p>
+
+<script language="JavaScript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+var numDias = 5;
+numDias = parseInt (numDias);
+
+var dolarCompra = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.10813/dados/ultimos/"+numDias+"?formato=json";
+var dolarVenda = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados/ultimos/"+numDias+"?formato=json";
+
+var hoje = dataAtual();
+$("#hoje").append("Hoje é  "+hoje +"<br>");
+var maiorValor =0;
+var menorValor;
+var dtMaiorvalor;
+var dtMenorValor;
+cotacao(dolarCompra, "compra");
+cotacao(dolarVenda, "venda");
+
+function cotacao(url, situacao){
+
+$.getJSON(url, function ( data ) {
+
+//Para pegar o historico de maneira decrescente
+var historico = parseInt(numDias-1);
+
+    $.each( data, function( key, val ) {
+    menorValor = val.valor;
+    dtMenorValor = val.data;
+
+          if (numDias !=1 || key !=historico){
+          $("#tabela").append('<tr><td>'+situacao+'</td><td>'+val.data+'</td><td>'+"R$ "+val.valor+'</td></tr>');
+          }
+      if (hoje == val.data){
+      var cotacaoHoje = "A cotação do Dólar para "+situacao+" é R$ "+val.valor;
+      $("#cotacaoHoje").append(cotacaoHoje +"<br>");
+      } else if (key == (historico)){
+      var cotacaoUltima = "A última cotação do Dólar para "+situacao+" é R$ "+val.valor+" do dia "+val.data;
+      $("#historico").append(cotacaoUltima +"<br>");
+      }
+
+  if (maiorValor < val.valor){
+    maiorValor = val.valor;
+    dtMaiorvalor = val.data;
+    }
+
+  if (menorValor > val.valor){
+  menorValor = val.valor;
+  dtMenorValor = val.data;
+  }
+
+    });
+
+});
+}
+
+function dataAtual(){
+var hoje = new Date();
+var dd = hoje.getDate();
+var mm = hoje.getMonth()+1; //January is 0!
+var yyyy = hoje.getFullYear();
+var dia = hoje.getDay();
+      var semana = new Array(6);
+      semana[0]='Domingo';
+      semana[1]='Segunda-Feira';
+      semana[2]='Terça-Feira';
+      semana[3]='Quarta-Feira';
+      semana[4]='Quinta-Feira';
+      semana[5]='Sexta-Feira';
+      semana[6]='Sábado';
+      diaSemana = semana[dia];
+
+  if(dd<10) {
+        dd = '0'+dd
+  }
+
+  if(mm<10) {
+        mm = '0'+mm
+  }
+hoje = dd + '/' + mm + '/' + yyyy;
+var hoje = diaSemana+" dia "+hoje;
+return hoje;
+}
+</script>
+
+<a href="https://mercadocotacao.com/dolar-hoje/" id="USD" title="Cotação do Dólar Americano Hoje" name="mercado_cotacao">Dólar Hoje</a><script async src="https://mercadocotacao.com/money/mercadocotacao.js"></script>
+
+<a href="https://mercadocotacao.com/euro-hoje/" id="EUR" title="Cotação do Euro Hoje" name="mercado_cotacao">Euro Hoje</a><script async src="https://mercadocotacao.com/money/mercadocotacao.js"></script>
+
+<a href="https://mercadocotacao.com/bitcoin-hoje/" id="BTC" title="Cotação do Bitcoin Hoje" name="mercado_cotacao">Bitcoin</a><script async src="https://mercadocotacao.com/money/mercadocotacao.js"></script>
+
+<a href="https://mercadocotacao.com/libra-esterlina-hoje/" id="GBP" title="Cotação da Libra Esterlina Hoje" name="mercado_cotacao">Libra Hoje</a><script async src="https://mercadocotacao.com/money/mercadocotacao.js"></script>
+
+<a href="https://mercadocotacao.com/peso-argentino-hoje/" id="ARS" title="Cotação do Peso Argentino Hoje" name="mercado_cotacao">Peso Hoje</a><script async src="https://mercadocotacao.com/money/mercadocotacao.js"></script>
+</div>
+</body>
+</html>
